@@ -53,7 +53,8 @@ public class BinaryLifting {
     }
 
     static class Node {
-        int depth, id;
+        // dist is for bfs, farthest functions below this class
+        int depth, id, dist;
         Node[] lift = new Node[20];
         ArrayList<Node> adj = new ArrayList<>();
 
@@ -88,6 +89,27 @@ public class BinaryLifting {
         }
 
         public String toString() { return id + ""; }
+    }
+
+    static Node farthest(Node[] nodes) {
+        Node max = nodes[0];
+        for(Node nn: nodes) if(nn.dist > max.dist) max = nn;
+        return max;
+    }
+    static void bfs(Node from, Node[] nodes) {
+        for(Node nn: nodes) nn.dist = -1;
+        from.dist = 0;
+        ArrayDeque<Node> bfs = new ArrayDeque<>();
+        bfs.add(from);
+        while(!bfs.isEmpty()) {
+            Node next = bfs.remove();
+            for(Node nn: next.adj) {
+                if(nn.dist == -1) {
+                    nn.dist = next.dist + 1;
+                    bfs.add(nn);
+                }
+            }
+        }
     }
 
     static void sort(int[] a) {
